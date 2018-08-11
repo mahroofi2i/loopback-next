@@ -165,6 +165,26 @@ export class DefaultCrudRepository<T extends Entity, ID>
     relationName: string,
     targetRepo: EntityCrudRepository<Target, TargetID>,
   ): HasManyRepositoryFactory<Target, ForeignKeyType> {
+    // property.array(targetModel)(target, key);
+
+    // const defaultFkName = camelCase(target.constructor.name + '_id');
+    // const hasKeyTo = definition && definition.keyTo;
+    // const hasDefaultFkProperty =
+    //   targetModel.definition &&
+    //   targetModel.definition.properties &&
+    //   targetModel.definition.properties[defaultFkName];
+    // if (!(hasKeyTo || hasDefaultFkProperty)) {
+    //   // note(shimks): should we also check for the existence of explicitly
+    //   // given foreign key name on the juggler definition?
+    //   throw new Error(
+    //     `foreign key ${defaultFkName} not found on ${
+    //       targetModel.name
+    //     } model's juggler definition`,
+    //   );
+    // }
+    // const meta = {keyTo: defaultFkName};
+    // Object.assign(meta, definition, {type: RelationType.hasMany});
+
     const meta = this.entityClass.definition.relations[relationName];
     return createHasManyRepositoryFactory<Target, TargetID, ForeignKeyType>(
       meta as HasManyDefinition,

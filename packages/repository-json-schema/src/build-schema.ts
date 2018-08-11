@@ -7,6 +7,7 @@ import {
   ModelMetadataHelper,
   PropertyDefinition,
   ModelDefinition,
+  resolveModelResolver,
 } from '@loopback/repository';
 import {MetadataInspector} from '@loopback/context';
 import {
@@ -124,6 +125,7 @@ export function metaToJsonProperty(meta: PropertyDefinition): JSONSchema {
   propertyType = stringTypeToWrapper(propertyType);
 
   if (isComplexType(propertyType)) {
+    propertyType = resolveModelResolver(propertyType);
     Object.assign(propDef, {$ref: `#/definitions/${propertyType.name}`});
   } else {
     Object.assign(propDef, {
@@ -167,16 +169,21 @@ export function modelToJsonSchema(ctor: Function): JSONSchema {
 
     const metaProperty = Object.assign({}, meta.properties[p]);
 
+    // we need to build metaType here if:
+    // - relation decorators were used (resolver)
+    // - it is undefined
+
     // populating "properties" key
     result.properties[p] = metaToJsonProperty(metaProperty);
 
     // populating JSON Schema 'definitions'
-    const referenceType = isArrayType(metaProperty.type as string | Function)
+    let referenceType = isArrayType(metaProperty.type as string | Function)
       ? // shimks: ugly type casting; this should be replaced by logic to throw
         // error if itemType/type is not a string or a function
         (metaProperty.itemType as string | Function)
       : (metaProperty.type as string | Function);
     if (typeof referenceType === 'function' && isComplexType(referenceType)) {
+      referenceType = resolveModelResolver(referenceType);
       const propSchema = getJsonSchema(referenceType);
 
       if (propSchema && Object.keys(propSchema).length > 0) {

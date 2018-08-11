@@ -370,6 +370,66 @@ describe('build-schema', () => {
           expectValidJsonSchema(jsonSchema);
         });
 
+        it('properly converts decorated custom array type with a resolver', () => {
+          @model()
+          class CustomType {
+            @property()
+            prop: string;
+          }
+
+          @model()
+          class TestModel {
+            @property.array(() => CustomType)
+            cusType: CustomType[];
+          }
+
+          const jsonSchema = modelToJsonSchema(TestModel);
+          expect(jsonSchema.properties).to.deepEqual({
+            cusType: {
+              type: 'array',
+              items: {$ref: '#/definitions/CustomType'},
+            },
+          });
+          expect(jsonSchema.definitions).to.deepEqual({
+            CustomType: {
+              title: 'CustomType',
+              properties: {
+                prop: {
+                  type: 'string',
+                },
+              },
+            },
+          });
+          expectValidJsonSchema(jsonSchema);
+        });
+
+        it('properly converts decorated models with hasMany and belongsTo', () => {
+          @model()
+          class TestModel {
+            @property.array(() => CustomType)
+            cusType: CustomType[];
+          }
+
+          const jsonSchema = modelToJsonSchema(TestModel);
+          expect(jsonSchema.properties).to.deepEqual({
+            cusType: {
+              type: 'array',
+              items: {$ref: '#/definitions/CustomType'},
+            },
+          });
+          expect(jsonSchema.definitions).to.deepEqual({
+            CustomType: {
+              title: 'CustomType',
+              properties: {
+                prop: {
+                  type: 'string',
+                },
+              },
+            },
+          });
+          expectValidJsonSchema(jsonSchema);
+        });
+
         it('creates definitions only at the root level of the schema', () => {
           @model()
           class CustomTypeFoo {
@@ -379,7 +439,7 @@ describe('build-schema', () => {
 
           @model()
           class CustomTypeBar {
-            @property.array(CustomTypeFoo)
+            @property.array(() => CustomTypeFoo)
             prop: CustomTypeFoo[];
           }
 

@@ -100,8 +100,30 @@ describe('relation decorator', () => {
       });
     });
 
+    // context('with complementing belongsTo', () => {
+    //   it('infers foreign key from property decorated by @belongsTo', () => {
+    //     const meta = MetadataInspector.getPropertyMetadata(
+    //       RELATIONS_KEY,
+    //       AddressBook.prototype,
+    //       'addresses',
+    //     );
+    //     const jugglerMeta = MetadataInspector.getPropertyMetadata(
+    //       MODEL_PROPERTIES_KEY,
+    //       AddressBook.prototype,
+    //       'addresses',
+    //     );
+    //     expect(meta).to.eql({
+    //       type: RelationType.hasMany,
+    //       keyTo: 'yellowPageId',
+    //     });
+    //     expect(jugglerMeta).to.eql({
+    //       type: Address,
+    //       array: true,
+    //     });
+    //   });
+    // });
+
     context('when interacting with @property.array', () => {
-      // Do you think this test case is necessary?
       it('does not get its property metadata overwritten by @property.array', () => {
         expect(() => {
           class Address extends Entity {

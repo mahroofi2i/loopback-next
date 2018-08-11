@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {Class} from '../common-types';
-import {Entity} from '../model';
+import {Entity, ModelResolver} from '../model';
 import {PropertyDecoratorFactory} from '@loopback/context';
 import {property} from './model.decorator';
 import {camelCase} from 'lodash';
@@ -78,7 +78,7 @@ export function hasOne(definition?: Object) {
  * @returns {(target:any, key:string)}
  */
 export function hasMany<T extends typeof Entity>(
-  targetModel: T,
+  targetModel: T | ModelResolver<T>,
   definition?: Partial<HasManyDefinition>,
 ) {
   // todo(shimks): extract out common logic (such as @property.array) to

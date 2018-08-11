@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {expect} from '@loopback/testlab';
-import {STRING} from '../../../';
+import {STRING, resolveModelResolver} from '../../../';
 import {Entity, ModelDefinition} from '../../../';
 
 describe('model', () => {
@@ -185,5 +185,17 @@ describe('model', () => {
 
     const instance = new NoId();
     expect(() => instance.getId()).to.throw(/missing.*id/);
+  });
+
+  context('resolveModelResolver', () => {
+    class SomeModel {}
+
+    it('resolves modelResolvers', () => {
+      expect(resolveModelResolver(() => SomeModel)).to.eql(SomeModel);
+    });
+
+    it('returns models as they were', () => {
+      expect(resolveModelResolver(SomeModel)).to.eql(SomeModel);
+    });
   });
 });

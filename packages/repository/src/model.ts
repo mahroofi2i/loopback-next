@@ -25,7 +25,7 @@ export interface PropertyDefinition {
   id?: boolean;
   json?: PropertyForm;
   store?: PropertyForm;
-  itemType?: PropertyType; // type of array
+  itemType?: PropertyType | ModelResolver; // type of array
   [attribute: string]: any; // Other attributes
 }
 
@@ -261,6 +261,20 @@ export abstract class Entity extends Model implements Persistable {
     }
     return where;
   }
+}
+
+/**
+ * DONT FORGET TO WRITE THE DOCS HERE
+ * REVIEWERS REMIND ME IF THIS IS STILL HERE
+ */
+export type ModelResolver<T = typeof Entity> = () => T;
+
+/**
+ * DOCSDOCSDOCSDOCS
+ * @param fn
+ */
+export function resolveModelResolver<T>(fn: ModelResolver<T> | T): T {
+  return /^class/.test(fn.toString()) ? fn : (fn as Function)();
 }
 
 /**
