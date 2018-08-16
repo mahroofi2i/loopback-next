@@ -11,7 +11,7 @@ summary: LoopBack 4 Todo Application Tutorial - Adding juggler bridge
 
 The Juggler Bridge is a "bridge" between the existing
 [loopback-datasource-juggler](https://github.com/strongloop/loopback-datasource-juggler)
-and the new LoopBack 4 architecture. It provides the capabilities required to
+and the LoopBack 4 architecture. It provides the capabilities required to
 access persistence layers/APIs, and perform
 [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations
 on those sources of data.
