@@ -202,8 +202,20 @@ describe('DefaultCrudRepository', () => {
     const repo = new DefaultCrudRepository(Note, ds);
     await repo.create({title: 't3', content: 'c3'});
     await repo.create({title: 't4', content: 'c4'});
-    const result = await repo.deleteAll({title: 't3'});
-    expect(result).to.eql(1);
+    const deleteCount = await repo.deleteAll();
+    expect(deleteCount).to.eql(2);
+    const count = await repo.count();
+    expect(count).to.eql(0);
+  });
+
+  it('implements Repository.deleteAll(<filter>)', async () => {
+    const repo = new DefaultCrudRepository(Note, ds);
+    const x = await repo.create({title: 't3', content: 'c3'});
+    await repo.create({title: 't4', content: 'c4'});
+    const deleteCount = await repo.deleteAll({title: 't3'});
+    expect(deleteCount).to.eql(1);
+    const result = await repo.findOne({where: {title: 't3'}});
+    expect(result).to.eql(null);
   });
 
   it('implements Repository.updateById()', async () => {
